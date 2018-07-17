@@ -55,11 +55,8 @@ def main(argv):
 
         # 3. Call the image analysis workflow using the run script
         cj.job.update(progress=25, statusComment="Launching workflow...")
-        command = "/usr/bin/xvfb-run java -Xmx6000m " \
-		  "-cp /fiji/jars/ij.jar ij.ImageJ  " \
-		  "--headless --console " \
-                  "-macro macro.ijm \"input={}, output={}, radius={}, noise={}\"" \
-		  .format(in_path, out_path, cj.parameters.ij_radius, cj.parameters.ij_noise)
+        command = "/usr/bin/xvfb-run java -Xmx6000m -cp /fiji/jars/ij.jar ij.ImageJ --headless --console " \
+                  "-macro macro.ijm \"input={}, output={}, radius={}, noise={}\"".format(in_path, out_path, cj.parameters.ij_radius, cj.parameters.ij_noise)
         return_code = call(command, shell=True, cwd="/fiji")  # waits for the subprocess to return
 
         if return_code != 0:
@@ -68,30 +65,30 @@ def main(argv):
             raise ValueError(err_desc)
 
         # 4. Upload the annotation and labels to Cytomine (annotations are extracted from the mask using
-        # the AnnotationExporter module)
-	cj.job.update(progress=75, status_comment="Extracting points...")
-	collection = AnnotationCollection()
-        for image in cj.monitor(input_images, start=60, end=80, period=0.1, prefix="Extracting and uploading points from masks"):
-            file = "{}.tif".format(image.id)
-            path = os.path.join(out_path, file)
-            data = io.imread(path)
+    # the AnnotationExporter module)
+    cj.job.update(progress=75, status_comment="Extracting points...")
+    annotations = AnnotationCollection()
+    for image in cj.monitor(input_images, start=60, end=80, period=0.1, prefix="Extracting and uploading points from masks"):
+        file = "{}.tif".format(image.id)
+        path = os.path.join(out_path, file)
+        data = io.imread(path)
 
-            # extract objects
-            points = numpy.transpose(data.nonzero())
-            print("Found {} polygons in this image {}.".format(len(points), image.id))
-	
-            # upload
-	    for c in points:
- 		x = c[0]
-		y = c[1]
-		center = Point(X[i], image.height - Y[i])
-                annotations.append(Annotation(location=center.wkt, id_image=image.id, id_project=cj.parameters.cytomine_id_project))
-                if len(annotations) % 100 == 0:
-	                annotations.save()
-                        annotations = AnnotationCollection()
-            	
+        # extract objects
+        points = numpy.transpose(data.nonzero())
+        print("Found {} points in this image {}.".format(len(points), image.id))
+        
+        # upload
+        for c in points:
+            x = c[0]
+            y = c[1]
+            center = Point(y, image.height - x)
+            annotations.append(Annotation(location=center.wkt, id_image=image.id, id_project=cj.parameters.cytomine_id_project))
+            if len(annotations) % 100 == 0:
+                annotations.save()
+                annotations = AnnotationCollection()
+                
             # Save last annotations
-	    annotations.save()
+        annotations.save()
 
          
 
