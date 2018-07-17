@@ -6,6 +6,8 @@ from cytomine import CytomineJob
 from cytomine.models import Annotation, Job, ImageInstanceCollection, AnnotationCollection, Property
 from shapely.affinity import affine_transform
 from skimage import io
+import numpy
+from shapely.geometry import Point
 
 from annotation_exporter import mask_to_objects_2d
 from neubiaswg5.metrics import computemetrics_batch
@@ -67,26 +69,31 @@ def main(argv):
 
         # 4. Upload the annotation and labels to Cytomine (annotations are extracted from the mask using
         # the AnnotationExporter module)
-        for image in cj.monitor(input_images, start=60, end=80, period=0.1, prefix="Extracting and uploading polygons from masks"):
+	cj.job.update(progress=75, status_comment="Extracting points...")
+	collection = AnnotationCollection()
+        for image in cj.monitor(input_images, start=60, end=80, period=0.1, prefix="Extracting and uploading points from masks"):
             file = "{}.tif".format(image.id)
             path = os.path.join(out_path, file)
             data = io.imread(path)
 
             # extract objects
-            slices = mask_to_objects_2d(data)
-
-            print("Found {} polygons in this image {}.".format(len(slices), image.id))
-
+            points = numpy.transpose(data.nonzero())
+            print("Found {} polygons in this image {}.".format(len(points), image.id))
+	
             # upload
-            collection = AnnotationCollection()
-            for obj_slice in slices:
-                collection.append(Annotation(
-                    location=affine_transform(obj_slice.polygon, [1, 0, 0, -1, 0, image.height]).wkt,
-                    id_image=image.id, id_project=cj.parameters.cytomine_id_project, property=[
-                        {"key": "index", "value": str(obj_slice.label)}
-                    ]
-                ))
-            collection.save()
+	    for c in points:
+ 		x = c[0]
+		y = c[1]
+		center = Point(X[i], image.height - Y[i])
+                annotations.append(Annotation(location=center.wkt, id_image=image.id, id_project=cj.parameters.cytomine_id_project))
+                if len(annotations) % 100 == 0:
+	                annotations.save()
+                        annotations = AnnotationCollection()
+            	
+            # Save last annotations
+	    annotations.save()
+
+         
 
         # 5. Compute and upload the metrics
         cj.job.update(progress=80, statusComment="Computing and uploading metrics...")
