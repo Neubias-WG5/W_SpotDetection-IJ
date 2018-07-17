@@ -72,7 +72,7 @@
             "id": "ij_noise",
             "value-key": "@ID",
             "command-line-flag": "--@id",
-            "name": "Threshold",
+            "name": "Noise",
             "description": "Noise tolerance",
             "type": "Number",
             "default-value": 2.5,
