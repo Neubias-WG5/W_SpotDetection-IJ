@@ -1,0 +1,82 @@
+{
+    "name": "2DSpotDetection-ImageJ",
+    "container-image": {
+        "image": "neubiaswg5/w_2dspotdetection-imagej",
+        "type": "singularity"
+    },
+    "schema-version": "cytomine-0.1",
+    "description": "2D spot detection using a LoG filter and the detection of minima.",
+    "command-line": "python wrapper.py CYTOMINE_HOST CYTOMINE_PUBLIC_KEY CYTOMINE_PRIVATE_KEY CYTOMINE_ID_PROJECT CYTOMINE_ID_SOFTWARE IJ_RADIUS IJ_NOISE",
+    "inputs": [
+        {
+            "id": "cytomine_host",
+            "value-key": "@ID",
+            "command-line-flag": "--@id",
+            "name": "Cytomine host",
+            "description": "Cytomine server hostname",
+            "type": "String",
+            "optional": false,
+            "set-by-server": true
+        },
+        {
+            "id": "cytomine_public_key",
+            "value-key": "@ID",
+            "command-line-flag": "--@id",
+            "name": "Cytomine public key",
+            "description": "Cytomine public key",
+            "type": "String",
+            "optional": false,
+            "set-by-server": true
+        },
+        {
+            "id": "cytomine_private_key",
+            "value-key": "@ID",
+            "command-line-flag": "--@id",
+            "name": "Cytomine private key",
+            "description": "Cytomine private key",
+            "type": "String",
+            "optional": false,
+            "set-by-server": true
+        },
+        {
+            "id": "cytomine_id_project",
+            "value-key": "@ID",
+            "command-line-flag": "--@id",
+            "name": "Cytomine project id",
+            "description": "Cytomine project id",
+            "type": "String",
+            "optional": false,
+            "set-by-server": true
+        },
+        {
+            "id": "cytomine_id_software",
+            "value-key": "@ID",
+            "command-line-flag": "--@id",
+            "name": "Cytomine software id",
+            "description": "Cytomine software id",
+            "type": "String",
+            "optional": false,
+            "set-by-server": true
+        },
+        {
+            "id": "ij_radius",
+            "value-key": "@ID",
+            "command-line-flag": "--@id",
+            "name": "Radius",
+            "description": "Radius for Gaussian smoothing",
+            "type": "Number",
+            "default-value": 2,
+            "optional": true
+        },
+        {
+            "id": "ij_noise",
+            "value-key": "@ID",
+            "command-line-flag": "--@id",
+            "name": "Threshold",
+            "description": "Noise tolerance",
+            "type": "Number",
+            "default-value": 2.5,
+            "optional": true
+        }
+    ]
+}
