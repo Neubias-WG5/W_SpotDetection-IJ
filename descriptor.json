@@ -1,7 +1,7 @@
 {
     "name": "2DSpotDetection-ImageJ",
     "container-image": {
-        "image": "neubiaswg5/w_2dspotdetection-imagej",
+        "image": "neubiaswg5/w_spotdetection-ij",
         "type": "singularity"
     },
     "schema-version": "cytomine-0.1",
