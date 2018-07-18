@@ -105,7 +105,7 @@ def main(argv):
         for key, value in results.items():
             Property(cj.job, key=key, value=str(value)).save()
         Property(cj.job, key="IMAGE_INSTANCES", value=str([im.id for im in input_images])).save()
-    
+
         results = computemetrics_batch(outfiles, reffiles, "PixCla", tmp_path)
 
         for key, value in results.items():
