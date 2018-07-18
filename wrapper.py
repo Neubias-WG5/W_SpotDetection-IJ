@@ -87,7 +87,7 @@ def main(argv):
                 annotations.save()
                 annotations = AnnotationCollection()
                 
-            # Save last annotations
+        # Save last annotations
         annotations.save()
 
          
@@ -100,7 +100,13 @@ def main(argv):
             for image in input_images
         ])
 
-        results = computemetrics_batch(outfiles, reffiles, "ObjSeg", tmp_path)
+        results = computemetrics_batch(outfiles, reffiles, "SptCnt", tmp_path)
+
+        for key, value in results.items():
+            Property(cj.job, key=key, value=str(value)).save()
+        Property(cj.job, key="IMAGE_INSTANCES", value=str([im.id for im in input_images])).save()
+	
+	results = computemetrics_batch(outfiles, reffiles, "PixCla", tmp_path)
 
         for key, value in results.items():
             Property(cj.job, key=key, value=str(value)).save()
