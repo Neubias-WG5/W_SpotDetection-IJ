@@ -10,11 +10,11 @@ def main(argv):
     with NeubiasJob.from_cli(argv) as nj:
         problem_cls = get_discipline(nj, default=CLASS_SPTCNT)
         is_2d = True
-        nj.job.update(progress=0, statusComment="Running workflow for problem class '{}' in {}D".format(problem_cls, 2 if is_2d else 3))
+        nj.job.update(status=Job.RUNNING, progress=0, statusComment="Running workflow for problem class '{}' in {}D".format(problem_cls, 2 if is_2d else 3))
 
         # 1. Create working directories on the machine
         # 2. Download the images
-        nj.job.update(status=Job.RUNNING, progress=0, statusComment="Initialisation...")
+        nj.job.update(progress=0, statusComment="Initialisation...")
         in_images, gt_images, in_path, gt_path, out_path, tmp_path = prepare_data(problem_cls, nj, is_2d=is_2d, **nj.flags)
 
         # 3. Call the image analysis workflow using the run script
