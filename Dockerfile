@@ -1,5 +1,6 @@
 FROM python:3.6.9-stretch
 
+RUN apt-get update && apt-get install libgeos-dev -y && apt-get clean
 # ---------------------------------------------------------------------------------------------------------------------
 # Install Java
 RUN apt-get update && apt-get install openjdk-8-jdk -y && apt-get clean
