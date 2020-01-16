@@ -7,8 +7,8 @@ inputDir = "/dockershare/667/in/";
 outputDir = "/dockershare/667/out/";
 
 // Functional parameters
-LapRad = 2;
-NoiseTol = 2.5;
+ij_radius = 2;
+ij_noise = 2.5;
 
 arg = getArgument();
 parts = split(arg, ",");
@@ -18,8 +18,8 @@ for(i=0; i<parts.length; i++) {
 	nameAndValue = split(parts[i], "=");
 	if (indexOf(nameAndValue[0], "input")>-1) inputDir=nameAndValue[1];
 	if (indexOf(nameAndValue[0], "output")>-1) outputDir=nameAndValue[1];
-	if (indexOf(nameAndValue[0], "radius")>-1) LapRad=nameAndValue[1];
-	if (indexOf(nameAndValue[0], "noise")>-1) NoiseTol=nameAndValue[1];
+	if (indexOf(nameAndValue[0], "ij_radius")>-1) ij_radius=nameAndValue[1];
+	if (indexOf(nameAndValue[0], "ij_noise")>-1) ij_noise=nameAndValue[1];
 }
 
 images = getFileList(inputDir);
@@ -34,8 +34,8 @@ for(i=0; i<images.length; i++) {
 		
 		// Processing
 		run("Clear Results", "");
-		run("FeatureJ Laplacian", "compute smoothing="+d2s(LapRad,2));
-		run("Find Maxima...", "noise="+d2s(NoiseTol,2)+" output=List light");
+		run("FeatureJ Laplacian", "compute smoothing="+d2s(ij_radius,2));
+		run("Find Maxima...", "noise="+d2s(ij_noise,2)+" output=List light");
 		
 		// Export results
 		newImage("Mask", "16-bit black", width, height, 1);
