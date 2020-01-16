@@ -62,8 +62,8 @@
             "id": "ij_radius",
             "value-key": "@ID",
             "command-line-flag": "--@id",
-            "name": "Radius",
-            "description": "Radius for Gaussian smoothing",
+            "name": "LoG Radius",
+            "description": "Radius of Laplacian of Gaussian filter",
             "type": "Number",
             "default-value": 2,
             "optional": true
@@ -72,8 +72,8 @@
             "id": "ij_noise",
             "value-key": "@ID",
             "command-line-flag": "--@id",
-            "name": "Noise",
-            "description": "Noise tolerance",
+            "name": "Noise tolerance",
+            "description": "Regional minima detection noise tolerance",
             "type": "Number",
             "default-value": 2.5,
             "optional": true
